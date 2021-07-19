@@ -7,6 +7,6 @@
 extern THD_WORKING_AREA(waPrintDebugThread, 1024);
 extern THD_FUNCTION(PrintDebugThread, arg);
 
-void PrintODriveDebugInfo(struct ODrive odrv);
+void PrintODriveDebugInfo(struct ODrive odrv, HardwareSerial& serial, ODriveArduino interface);
 
 #endif

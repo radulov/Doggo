@@ -103,7 +103,23 @@ void chSetup() {
     // TODO: add sensor polling thread
     // TODO: create gait pattern thread (aka one that coordinates leg by generating leg setpoints)
 
-    // USB Serial Thread: reads any incoming serial messages from the computer
+    
+
+    
+
+    
+
+    
+
+        // Datalog Thread: logs IMU data
+    chThdCreateStatic(waDatalogThread, sizeof(waDatalogThread),
+        NORMALPRIO, DatalogThread, NULL);
+
+        // Blink thread: blinks the onboard LED
+//    chThdCreateStatic(waBlinkThread, sizeof(waBlinkThread),
+//        NORMALPRIO, BlinkThread, NULL);
+
+        // USB Serial Thread: reads any incoming serial messages from the computer
     chThdCreateStatic(waUSBSerialThread, sizeof(waUSBSerialThread), NORMALPRIO,
         USBSerialThread, NULL);
 
@@ -111,15 +127,7 @@ void chSetup() {
     chThdCreateStatic(waPrintDebugThread, sizeof(waPrintDebugThread),
         NORMALPRIO, PrintDebugThread, NULL);
 
-    // Blink thread: blinks the onboard LED
-    chThdCreateStatic(waBlinkThread, sizeof(waBlinkThread),
-        NORMALPRIO, BlinkThread, NULL);
-
-    // Datalog Thread: logs IMU data
-    chThdCreateStatic(waDatalogThread, sizeof(waDatalogThread),
-        NORMALPRIO, DatalogThread, NULL);
-
-    // IMU Thread: Queries IMU and stores data
+        // IMU Thread: Queries IMU and stores data
     chThdCreateStatic(waIMUThread, sizeof(waIMUThread),
         NORMALPRIO, IMUThread, NULL);
 }
@@ -137,6 +145,9 @@ void setup() {
     // Wait for USB Serial.
     while (!Serial) {}
 
+//    Serial5.begin(115200);
+//    Serial5.println("Xbee test 1");
+
     PrintStates();
     PrintGaitCommands();
 
@@ -145,6 +156,15 @@ void setup() {
     odrv1Serial.begin(500000);
     odrv2Serial.begin(500000);
     odrv3Serial.begin(500000);
+
+    odrv0Serial.write("r axis0.encoder.pos_estimate\n");
+    Serial.print(odrv0Interface.readFloat());
+    odrv1Serial.write("r axis0.encoder.pos_estimate\n");
+    Serial.print(odrv1Interface.readFloat());
+    odrv2Serial.write("r axis0.encoder.pos_estimate\n");
+    Serial.print(odrv2Interface.readFloat());
+    odrv3Serial.write("r axis0.encoder.pos_estimate\n");
+    Serial.print(odrv3Interface.readFloat());
     // TODO: figure out if i should wait for serial available... or some indication the odrive is on
 
     // Start ChibiOS.

@@ -45,6 +45,11 @@ THD_FUNCTION(PositionControlThread, arg) {
                     odrv1Interface.SetCoupledPosition(theta1, gamma1, stop_gain);
                     odrv2Interface.SetCoupledPosition(theta1, gamma1, stop_gain);
                     odrv3Interface.SetCoupledPosition(theta2, gamma2, stop_gain);
+
+//                    UpdateConfig(odrv0Serial);
+//                    UpdateConfig(odrv1Serial);
+//                    UpdateConfig(odrv2Serial);
+//                    UpdateConfig(odrv3Serial);
                 }
                 break;
             case DANCE:
@@ -126,6 +131,24 @@ void SetODriveCurrentLimits(float limit) {
     odrv1Interface.SetCurrentLims(limit);
     odrv2Interface.SetCurrentLims(limit);
     odrv3Interface.SetCurrentLims(limit);
+}
+
+void UpdateConfig(HardwareSerial& serial) {
+  serial.write("w config.brake_resistance 0.5\n");
+  serial.write("w axis0.motor.config.current_lim 60\n");
+  serial.write("w axis1.motor.config.current_lim 60\n");
+  serial.write("w axis0.controller.config.pos_gain 0.03\n");
+  serial.write("w axis1.controller.config.pos_gain 0.03\n");
+  serial.write("w axis0.controller.config.vel_gain 0.003\n");
+  serial.write("w axis1.controller.config.vel_gain 0.003\n");
+  serial.write("w axis0.controller.config.vel_integrator_gain 0.015\n");
+  serial.write("w axis1.controller.config.vel_integrator_gain 0.015\n");
+
+                    
+//    axis.controller.config.pos_gain = 0.01 #f [(counts/s) / counts]
+//    axis.controller.config.vel_gain = 0.0005 #[A/(counts/s)]
+//    axis.controller.config.vel_limit = 50000.0
+//    axis.controller.config.vel_integrator_gain = 0 #[A/((counts/s) * s)]
 }
 
 

@@ -31,6 +31,7 @@ void test();
 void hop(struct GaitParams params);
 void reset();
 void CommandAllLegs(float theta, float gamma, struct LegGain gains);
+void UpdateConfig(HardwareSerial& serial);
 
 enum States {
     STOP = 0,

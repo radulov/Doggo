@@ -1,20 +1,20 @@
-
 #include <SoftwareSerial.h>
-#include <ODriveArduino.h>
+#include "ODriveArduino.h"
 
 // Printing with stream operator
 template<class T> inline Print& operator <<(Print &obj,     T arg) { obj.print(arg);    return obj; }
 template<>        inline Print& operator <<(Print &obj, float arg) { obj.print(arg, 4); return obj; }
 
 // Serial to the ODrive
-SoftwareSerial odrive_serial(8, 9); //RX (ODrive TX), TX (ODrive RX)
+HardwareSerial& odrive_serial = Serial1;
+//SoftwareSerial odrive_serial(8, 9); //RX (ODrive TX), TX (ODrive RX)
 
 // ODrive object
-ODriveArduino odrive(odrive_serial);
+ODriveArduino odrive(Serial1);
 
 void setup() {
   // ODrive uses 115200 baud
-  odrive_serial.begin(115200);
+  odrive_serial.begin(500000);
 
   // Serial to PC
   Serial.begin(115200);

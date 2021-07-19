@@ -46,6 +46,7 @@ struct ODrive {
     float sp_theta = 0; // set point values
     float est_theta = 0;
     float est_gamma = 0; // actual values from the odrive
+    HardwareSerial serial = NULL;
 };
 
 struct IMU {

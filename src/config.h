@@ -19,7 +19,7 @@
 
 //------------------------------------------------------------------------------
 // Robot Safety Parameters
-#define CURRENT_LIM 50.0f
+#define CURRENT_LIM 70.0f
 
 //------------------------------------------------------------------------------
 // XBEE Config
@@ -35,7 +35,7 @@
 //------------------------------------------------------------------------------
 // IMU Parameters
 // Set enable flag to 1 to use accelerometer and gyro, set to 0 to just use gyro
-#define IMU_ENABLE_COMPLEMENTARY_FILTER 0
+#define IMU_ENABLE_COMPLEMENTARY_FILTER 1
 #define IMU_COMPLEMENTARY_FILTER_TAU 0.95f
 
 // Set above 0 to print imu debug messages
@@ -44,7 +44,7 @@
 // Pins for BNO080 IMU
 #define SPI_CS_PIN 15
 #define SPI_WAK_PIN 14
-#define SPI_INTPIN 17
+#define SPI_INTPIN 18
 #define SPI_RSTPIN 16
 
 //------------------------------------------------------------------------------

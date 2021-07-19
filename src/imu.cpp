@@ -12,48 +12,62 @@ float raw_integrated_gyro_y = 0;
 THD_WORKING_AREA(waIMUThread, 4096);
 
 THD_FUNCTION(IMUThread, arg) {
-    (void)arg;
-
-    // Turn on SPI for IMU
+    
+    bool initialized = false;
+    int counter = 0;
     SPI.begin();
-
+      
     //Initialize IMU
     int polling_period = 1000.0/IMU_SEND_FREQ;
-    if(!bno080_imu.beginSPI(SPI_CS_PIN, SPI_WAK_PIN, SPI_INTPIN, SPI_RSTPIN)) {
-        Serial.println("IMU beginSPI failed (non-fatal)...");
-        // return;
-    }
-    bno080_imu.enableGyro(polling_period);
-
-    // Enable accelerometer according to config
-    int sensor_count = 1;
-    if (IMU_ENABLE_COMPLEMENTARY_FILTER) {
-        bno080_imu.enableAccelerometer(polling_period);
-        sensor_count = 2;
-    }
-
-    if (IMU_VERBOSE > 0) {
-        Serial << "Initialized BNO080...\n";
-        Serial << "Rotation vector enabled at " << IMU_SEND_FREQ << "Hz\n";
-    }
-
     float pitch_estimate = 0;
-    float pitch_acc = 0;
-    float prev_pitch_acc = 0;
-    float rotations = 0;
-
-    float velocity_x = 0;
-
-    // The BNO080 will be sending both gyro and accel readings every poll period.
-    // if we enable the complementary filter.
-    // dataAvailable doesn't tell us which sensor was just read so we keep a
-    // counter telling us how many readings we got since the last full read.
-    int sensors_read = 0;
-
+          float pitch_acc = 0;
+          float prev_pitch_acc = 0;
+          float rotations = 0;
+          int sensor_count = 1;
+      
+          float velocity_x = 0;
+      
+          // The BNO080 will be sending both gyro and accel readings every poll period.
+          // if we enable the complementary filter.
+          // dataAvailable doesn't tell us which sensor was just read so we keep a
+          // counter telling us how many readings we got since the last full read.
+          int sensors_read = 0;
+    (void)arg;
+      
+          // Turn on SPI for IMU
+          
     while(true) {
+        if (!initialized) {
+                
+      //  
+      //  bno080_imu.enableDebugging(Serial);
+          if(!bno080_imu.beginSPI(SPI_CS_PIN, SPI_WAK_PIN, SPI_INTPIN, SPI_RSTPIN)) {
+              Serial.println("IMU beginSPI failed (non-fatal)...");
+              
+          }
+          initialized = true;
+          bno080_imu.enableGyro(polling_period);
+      
+          // Enable accelerometer according to config
+          
+          if (IMU_ENABLE_COMPLEMENTARY_FILTER) {
+              bno080_imu.enableAccelerometer(polling_period);
+              sensor_count = 2;
+          }
+      
+          if (IMU_VERBOSE > 0) {
+              Serial << "Initialized BNO080...\n";
+              Serial << "Rotation vector enabled at " << IMU_SEND_FREQ << "Hz\n";
+          }
+//          }
+      
+          
+        } else {
         long read_begin_ts = micros(); // Time stamp for before we started reading
         while (bno080_imu.dataAvailable() == true)
         {
+
+//          Serial5.println("Loop 2");
             // This block is triggered at a rate of 2*IMU_SEND_FREQ
             sensors_read++;
             if (sensors_read >= sensor_count) {
@@ -126,8 +140,16 @@ THD_FUNCTION(IMUThread, arg) {
                 // TODO: Read gyro and accel:
             }
         }
+        }
 
-        chThdSleepMicroseconds(1000000/IMU_FREQ);
+//        delay(1000/IMU_FREQ);
+      
+        // chThdSleepMilliseconds(1000/IMU_FREQ);
+//        if (counter > 1000) {
+        chThdSleepMilliseconds(3);
+//        } else {
+//          counter++;
+//        }
     }
 }
 
